@@ -1,0 +1,43 @@
+CREATE OR REPLACE TABLE DIM_DATE AS
+SELECT DISTINCT
+    CAST(game_datetime AS DATE) AS date_key,
+    YEAR(game_datetime)         AS year,
+    MONTH(game_datetime)        AS month,
+    DAY(game_datetime)          AS day
+FROM STG_FIXTURES_DEDUP;
+
+CREATE OR REPLACE TABLE DIM_COMPETITION AS
+SELECT DISTINCT
+    competition_uuid AS competition_key,
+    competition,
+    season_uuid,
+    season,
+    region,
+    country,
+    country_code
+FROM STG_FIXTURES_DEDUP;
+
+CREATE OR REPLACE TABLE DIM_TEAM AS
+SELECT DISTINCT
+    home_team_uuid AS team_key,
+    home_team      AS team_name,
+    home_team_short AS team_short_name
+FROM STG_FIXTURES_DEDUP
+
+UNION
+
+SELECT DISTINCT
+    away_team_uuid AS team_key,
+    away_team      AS team_name,
+    away_team_short AS team_short_name
+FROM STG_FIXTURES_DEDUP;
+
+CREATE OR REPLACE TABLE DIM_VENUE AS
+SELECT DISTINCT
+    venue_uuid AS venue_key,
+    venue,
+    region,
+    country,
+    country_code
+FROM STG_FIXTURES_DEDUP;
+
