@@ -1,33 +1,34 @@
 # DT_Projekt
 
-Téma projektu
-Témou projektu je analýza vývoja pandémie COVID‑19 na základe dát z Európskeho centra pre prevenciu a kontrolu chorôb (ECDC). Dataset obsahuje denné epidemiologické údaje pre všetky krajiny sveta, vrátane počtu prípadov, úmrtí, populácie a geografických atribútov.
+🎯 Téma projektu
+Tento projekt sa zameriava na analýzu vývoja pandémie COVID‑19 pomocou oficiálnych epidemiologických dát publikovaných Európskym centrom pre prevenciu a kontrolu chorôb (ECDC). Dataset je dostupný priamo v Snowflake Marketplace a obsahuje denné údaje o počte prípadov, úmrtí, populácii a geografických atribútoch pre všetky krajiny sveta.
 
-Prečo som si vybral tento dataset:
+💡 Prečo som si vybral tento dataset
+Dáta sú spoľahlivé, oficiálne a medzinárodne uznávané.
 
-Dáta sú kvalitné, oficiálne a pravidelne aktualizované.
+Dataset je dostupný v Snowflake Marketplace, čo spĺňa požiadavky projektu.
 
-Dataset je dostupný priamo v Snowflake Marketplace, čo spĺňa požiadavky zadania.
+Obsahuje časové, geografické aj numerické metriky, ideálne pre tvorbu dimenzionálneho modelu.
 
-Obsahuje časové, geografické aj numerické metriky, ktoré sú ideálne pre tvorbu dimenzionálneho modelu.
+Umožňuje analyzovať reálne udalosti a sledovať vývoj pandémie v rôznych krajinách.
 
-Umožňuje analyzovať reálne udalosti, ako priebeh pandémie, trendy a dopady na jednotlivé krajiny.
+Je vhodný na demonštráciu ELT procesov, deduplikácie, čistenia dát a tvorby fact/dim tabuliek.
 
-Aký biznis proces dáta podporujú:
-
+🏢 Biznis proces, ktorý dáta podporujú
 Dataset podporuje biznis proces monitorovania epidemiologickej situácie.
-
 Konkrétne umožňuje:
 
 sledovať denné prípady a úmrtia,
 
 porovnávať krajiny a kontinenty,
 
-vyhodnocovať trendy a dynamiku šírenia,
+vyhodnocovať trendy šírenia,
 
-podporovať rozhodovanie v oblasti verejného zdravia.
+podporovať rozhodovanie v oblasti verejného zdravia,
 
-Typy údajov v datasete,
+vytvárať reporty a vizualizácie pre analytikov a štátne inštitúcie.
+
+🧩 Typy údajov v datasete
 Dataset obsahuje tieto typy dát:
 
 časové údaje – dátum reportu,
@@ -38,10 +39,13 @@ numerické metriky – denné prípady, denné úmrtia, populácia,
 
 technické údaje – dátum poslednej aktualizácie.
 
-Tieto údaje sú vhodné na tvorbu faktovej tabuľky aj dimenzií.
+Tieto údaje sú vhodné pre tvorbu staging vrstvy, dimenzií aj faktovej tabuľky.
 
-Popis tabuliek zo zdrojového datasetu
+📚 Popis zdrojovej tabuľky
 Zdrojová tabuľka pochádza zo Snowflake Marketplace:
+
+COVID19_EPIDEMIOLOGICAL_DATA.PUBLIC.ECDC_GLOBAL
+Obsahuje denné epidemiologické údaje pre všetky krajiny sveta.
 
 
 COUNTRY_REGION, ISO3166_1, CONTINENTEXP sú základom pre geografické dimenzie.
@@ -51,6 +55,3 @@ CASES a DEATHS sú hlavné epidemiologické metriky.
 POPULATION umožňuje prepočítať metriky na obyvateľa.
 
 LAST_UPDATE_DATE slúži na deduplikáciu a výber najnovších záznamov.
-
-Zhrnutie
-Tento dataset poskytuje kompletný základ pre analytický model sledujúci vývoj pandémie COVID‑19. Obsahuje všetky potrebné typy údajov pre tvorbu staging vrstvy, dimenzií aj faktovej tabuľky. Vďaka tomu je vhodný pre vizualizácie, reporting a podporu rozhodovania.
