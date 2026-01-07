@@ -1,0 +1,16 @@
+SELECT DISTINCT team_name
+FROM DIM_TEAM
+ORDER BY team_name;
+
+SELECT
+    d.date_key,
+    t.team_name,
+    f.runs_scored,
+    f.cumulative_runs_scored,
+    f.previous_game_runs_scored,
+    f.game_sequence_number
+FROM FACT_GAME_RESULTS f
+JOIN DIM_TEAM t ON f.team_key = t.team_key
+JOIN DIM_DATE d ON f.date_key = d.date_key
+WHERE t.team_name = 'Tokyo Yakult Swallows'
+ORDER BY d.date_key;
