@@ -1,0 +1,53 @@
+CREATE OR REPLACE TABLE FACT_GAME_RESULTS AS
+WITH BASE AS (
+    SELECT
+        f.game_uuid,
+        CAST(f.game_datetime AS DATE) AS date_key,
+        f.competition_uuid           AS competition_key,
+        f.home_team_uuid             AS team_key,
+        f.venue_uuid                 AS venue_key,
+        'HOME'                       AS side,
+        f.home_score                 AS runs_scored,
+        f.away_score                 AS runs_conceded,
+        (f.home_score + f.away_score) AS total_runs,
+        CASE WHEN f.home_score > f.away_score THEN 1 ELSE 0 END AS is_win,
+        CASE WHEN f.home_score < f.away_score THEN 1 ELSE 0 END AS is_loss,
+        CASE WHEN f.home_score = f.away_score THEN 1 ELSE 0 END AS is_draw
+    FROM STG_FIXTURES_DEDUP f
+
+    UNION ALL
+
+    SELECT
+        f.game_uuid,
+        CAST(f.game_datetime AS DATE) AS date_key,
+        f.competition_uuid           AS competition_key,
+        f.away_team_uuid             AS team_key,
+        f.venue_uuid                 AS venue_key,
+        'AWAY'                       AS side,
+        f.away_score                 AS runs_scored,
+        f.home_score                 AS runs_conceded,
+        (f.home_score + f.away_score) AS total_runs,
+        CASE WHEN f.away_score > f.home_score THEN 1 ELSE 0 END AS is_win,
+        CASE WHEN f.away_score < f.home_score THEN 1 ELSE 0 END AS is_loss,
+        CASE WHEN f.away_score = f.home_score THEN 1 ELSE 0 END AS is_draw
+    FROM STG_FIXTURES_DEDUP f
+),
+ENRICHED AS (
+    SELECT
+        b.*,
+        SUM(b.runs_scored) OVER (
+            PARTITION BY b.team_key, b.competition_key
+            ORDER BY b.date_key, b.game_uuid
+        ) AS cumulative_runs_scored,
+        LAG(b.runs_scored) OVER (
+            PARTITION BY b.team_key, b.competition_key
+            ORDER BY b.date_key, b.game_uuid
+        ) AS previous_game_runs_scored,
+        ROW_NUMBER() OVER (
+            PARTITION BY b.team_key, b.competition_key
+            ORDER BY b.date_key, b.game_uuid
+        ) AS game_sequence_number
+    FROM BASE b
+)
+SELECT *
+FROM ENRICHED;
