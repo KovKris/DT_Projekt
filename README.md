@@ -335,3 +335,117 @@ sql:
     SELECT *
     FROM ENRICHED;
 
+
+⭐ Vizualizácia 1: Vývoj skóre tímu v čase
+SQL
+sql:
+    
+    SELECT
+        d.date_key,
+        t.team_name,
+        f.runs_scored,
+        f.cumulative_runs_scored
+    FROM FACT_GAME_RESULTS f
+    JOIN DIM_TEAM t
+        ON f.team_key = t.team_key
+    JOIN DIM_DATE d
+        ON f.date_key = d.date_key
+    WHERE t.team_name = 'Tokyo Yakult Swallows'
+    ORDER BY d.date_key;
+Interpretácia
+Tento graf ukazuje, ako sa menil výkon tímu Tokyo Yakult Swallows počas sezóny.
+Hodnota runs_scored zobrazuje skóre v jednotlivých zápasoch, zatiaľ čo cumulative_runs_scored ukazuje kumulatívny trend.
+Graf umožňuje identifikovať obdobia zlepšenia alebo poklesu formy.
+
+Obrázok:
+
+<img width="2560" height="1450" alt="Graf-1" src="https://github.com/user-attachments/assets/c27835aa-f863-4776-8bfb-e3b8cfdc1250" />
+
+⭐ Vizualizácia 2: Poradie tímov podľa počtu výhier
+SQL
+sql
+
+    SELECT
+        t.team_name,
+        SUM(f.is_win) AS total_wins
+    FROM FACT_GAME_RESULTS f
+    JOIN DIM_TEAM t
+        ON f.team_key = t.team_key
+    GROUP BY t.team_name
+    ORDER BY total_wins DESC;
+Interpretácia
+Graf zobrazuje rebríček tímov podľa počtu výhier.
+Umožňuje rýchlo identifikovať najúspešnejšie tímy v súťaži a porovnať ich výkonnosť.
+Je vhodný pre bar chart alebo column chart.
+
+Obrázok:
+
+<img width="2560" height="1392" alt="Graf-2" src="https://github.com/user-attachments/assets/abfd0ba8-23c8-4a7a-88b7-abb4645dd641" />
+
+⭐ Vizualizácia 3: Počet odohraných zápasov podľa dátumu
+SQL
+sql
+
+    SELECT
+        d.date_key,
+        COUNT(*) AS games_played
+    FROM FACT_GAME_RESULTS f
+    JOIN DIM_DATE d
+        ON f.date_key = d.date_key
+    GROUP BY d.date_key
+    ORDER BY d.date_key;
+Interpretácia
+Graf ukazuje, koľko zápasov sa odohralo v jednotlivých dňoch.
+Pomáha identifikovať dni s najväčšou zápasovou aktivitou a odhaliť prípadné sezónne vzorce.
+
+Obrázok:
+
+<img width="2560" height="1392" alt="Graf-3" src="https://github.com/user-attachments/assets/5cf57b10-270d-43fc-9e4e-2a0a53d37413" />
+
+
+⭐ Vizualizácia 4: Priemerné skóre podľa dňa v týždni
+SQL
+sql
+
+    SELECT
+        t.team_name,
+        DAYOFWEEK(d.date_key) AS weekday,
+        AVG(f.runs_scored) AS avg_runs
+    FROM FACT_GAME_RESULTS f
+    JOIN DIM_TEAM t
+        ON f.team_key = t.team_key
+    JOIN DIM_DATE d
+        ON f.date_key = d.date_key
+    GROUP BY t.team_name, weekday
+    ORDER BY t.team_name, weekday;
+Interpretácia
+Táto vizualizácia ukazuje, ako sa mení priemerné skóre tímov podľa dňa v týždni.
+Pomáha odhaliť, či tímy dosahujú lepšie výsledky cez víkend alebo počas pracovných dní.
+Je vhodná pre heatmapu alebo grouped bar chart.
+
+Obrázok:
+
+<img width="2560" height="1392" alt="Graf-4" src="https://github.com/user-attachments/assets/b630842a-48c6-4031-b889-c62dab52db54" />
+
+⭐ Vizualizácia 5: Najproduktívnejšie štadióny podľa počtu bodov
+SQL
+sql
+
+    SELECT
+        v.venue,
+        SUM(f.total_runs) AS total_runs_at_venue
+    FROM FACT_GAME_RESULTS f
+    JOIN DIM_VENUE v
+        ON f.venue_key = v.venue_key
+    GROUP BY v.venue
+    ORDER BY total_runs_at_venue DESC;
+Interpretácia
+Graf porovnáva štadióny podľa celkového počtu bodov, ktoré na nich padli.
+Umožňuje identifikovať „najofenzívnejšie“ štadióny, kde zápasy bývajú najproduktívnejšie.
+
+Obrázok:
+
+<img width="2560" height="1392" alt="Graf-5" src="https://github.com/user-attachments/assets/a26291cd-8a7a-4326-bc8c-904ffd0d71c5" />
+
+Autor:Kristóf Kovács
+
