@@ -159,6 +159,11 @@ Code
 OPTA_DATA_BASEBALL_SCHEDULE_AND_RESULTS_DATA__SAMPLE.BASEBALL.FIXTURES
 Staging RAW
 sql
+USE DATABASE LEOPARD_DB;
+USE WAREHOUSE  LEOPARD_WH;
+CREATE SCHEMA  LEOPARD_DB.STAGING;
+USE SCHEMA LEOPARD_DB.STAGING;
+
 CREATE OR REPLACE TABLE STG_FIXTURES_RAW AS
 SELECT *
 FROM OPTA_DATA_BASEBALL_SCHEDULE_AND_RESULTS_DATA__SAMPLE.BASEBALL.FIXTURES;
@@ -166,20 +171,44 @@ FROM OPTA_DATA_BASEBALL_SCHEDULE_AND_RESULTS_DATA__SAMPLE.BASEBALL.FIXTURES;
 Čistenie dát
 sql
 CREATE OR REPLACE TABLE STG_FIXTURES_CLEAN AS
-SELECT ...
+SELECT
+    GAME_UUID          AS game_uuid,
+    REGION_UUID        AS region_uuid,
+    REGION             AS region,
+    COUNTRY_UUID       AS country_uuid,
+    COUNTRY            AS country,
+    COUNTRY_CODE       AS country_code,
+    COMPETITION_UUID   AS competition_uuid,
+    COMPETITION        AS competition,
+    SEASON_UUID        AS season_uuid,
+    SEASON             AS season,
+    ROUND              AS round,
+    DATE_TIME          AS game_datetime,
+    HOME_UUID          AS home_team_uuid,
+    HOME               AS home_team,
+    HOME_SHORT         AS home_team_short,
+    AWAY_UUID          AS away_team_uuid,
+    AWAY               AS away_team,
+    AWAY_SHORT         AS away_team_short,
+    HOME_SCORE         AS home_score,
+    AWAY_SCORE         AS away_score,
+    VENUE_UUID         AS venue_uuid,
+    VENUE              AS venue,
+    STATUS             AS status
 FROM STG_FIXTURES_RAW
 WHERE HOME_SCORE IS NOT NULL
   AND AWAY_SCORE IS NOT NULL;
 Deduplikácia
 sql
-CREATE OR REPLACE TABLE STG_FIXTURES_DEDUP AS
+  CREATE OR REPLACE TABLE STG_FIXTURES_DEDUP AS
 SELECT *
 FROM (
-    SELECT *,
-           ROW_NUMBER() OVER (
-               PARTITION BY game_uuid, game_datetime
-               ORDER BY game_datetime DESC
-           ) AS rn
+    SELECT
+        *,
+        ROW_NUMBER() OVER (
+            PARTITION BY game_uuid, game_datetime
+            ORDER BY game_datetime DESC
+        ) AS rn
     FROM STG_FIXTURES_CLEAN
 )
 WHERE rn = 1;
