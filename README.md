@@ -159,109 +159,112 @@ Code
 OPTA_DATA_BASEBALL_SCHEDULE_AND_RESULTS_DATA__SAMPLE.BASEBALL.FIXTURES
 Staging RAW
 sql
-    USE DATABASE LEOPARD_DB;
-    USE WAREHOUSE  LEOPARD_WH;
-    CREATE SCHEMA  LEOPARD_DB.STAGING;
-    USE SCHEMA LEOPARD_DB.STAGING;
-
+    
     CREATE OR REPLACE TABLE STG_FIXTURES_RAW AS
     SELECT *
     FROM OPTA_DATA_BASEBALL_SCHEDULE_AND_RESULTS_DATA__SAMPLE.BASEBALL.FIXTURES;
 📤 Load
 Čistenie dát
 sql
-CREATE OR REPLACE TABLE STG_FIXTURES_CLEAN AS
-SELECT
-    GAME_UUID          AS game_uuid,
-    REGION_UUID        AS region_uuid,
-    REGION             AS region,
-    COUNTRY_UUID       AS country_uuid,
-    COUNTRY            AS country,
-    COUNTRY_CODE       AS country_code,
-    COMPETITION_UUID   AS competition_uuid,
-    COMPETITION        AS competition,
-    SEASON_UUID        AS season_uuid,
-    SEASON             AS season,
-    ROUND              AS round,
-    DATE_TIME          AS game_datetime,
-    HOME_UUID          AS home_team_uuid,
-    HOME               AS home_team,
-    HOME_SHORT         AS home_team_short,
-    AWAY_UUID          AS away_team_uuid,
-    AWAY               AS away_team,
-    AWAY_SHORT         AS away_team_short,
-    HOME_SCORE         AS home_score,
-    AWAY_SCORE         AS away_score,
-    VENUE_UUID         AS venue_uuid,
-    VENUE              AS venue,
-    STATUS             AS status
-FROM STG_FIXTURES_RAW
-WHERE HOME_SCORE IS NOT NULL
-  AND AWAY_SCORE IS NOT NULL;
+
+    CREATE OR REPLACE TABLE STG_FIXTURES_CLEAN AS
+    SELECT
+        GAME_UUID          AS game_uuid,
+        REGION_UUID        AS region_uuid,
+        REGION             AS region,
+        COUNTRY_UUID       AS country_uuid,
+        COUNTRY            AS country,
+        COUNTRY_CODE       AS country_code,
+        COMPETITION_UUID   AS competition_uuid,
+        COMPETITION        AS competition,
+        SEASON_UUID        AS season_uuid,
+        SEASON             AS season,
+        ROUND              AS round,
+        DATE_TIME          AS game_datetime,
+        HOME_UUID          AS home_team_uuid,
+        HOME               AS home_team,
+        HOME_SHORT         AS home_team_short,
+        AWAY_UUID          AS away_team_uuid,
+        AWAY               AS away_team,
+        AWAY_SHORT         AS away_team_short,
+        HOME_SCORE         AS home_score,
+        AWAY_SCORE         AS away_score,
+        VENUE_UUID         AS venue_uuid,
+        VENUE              AS venue,
+        STATUS             AS status
+    FROM STG_FIXTURES_RAW
+    WHERE HOME_SCORE IS NOT NULL
+      AND AWAY_SCORE IS NOT NULL;
 Deduplikácia
 sql
-  CREATE OR REPLACE TABLE STG_FIXTURES_DEDUP AS
-SELECT *
-FROM (
-    SELECT
-        *,
-        ROW_NUMBER() OVER (
-            PARTITION BY game_uuid, game_datetime
-            ORDER BY game_datetime DESC
-        ) AS rn
-    FROM STG_FIXTURES_CLEAN
-)
-WHERE rn = 1;
+    
+    CREATE OR REPLACE TABLE STG_FIXTURES_DEDUP AS
+    SELECT *
+    FROM (
+        SELECT
+            *,
+            ROW_NUMBER() OVER (
+                PARTITION BY game_uuid, game_datetime
+                ORDER BY game_datetime DESC
+            ) AS rn
+        FROM STG_FIXTURES_CLEAN
+    )
+    WHERE rn = 1;
 ⚙️ Transform
 DIM_DATE
 sql
-CREATE OR REPLACE TABLE DIM_DATE AS
-SELECT DISTINCT
-    CAST(game_datetime AS DATE)          AS date_key,
-    YEAR(game_datetime)                  AS year,
-    MONTH(game_datetime)                 AS month,
-    DAY(game_datetime)                   AS day
-FROM STG_FIXTURES_DEDUP;
+
+    CREATE OR REPLACE TABLE DIM_DATE AS
+    SELECT DISTINCT
+        CAST(game_datetime AS DATE)          AS date_key,
+        YEAR(game_datetime)                  AS year,
+        MONTH(game_datetime)                 AS month,
+        DAY(game_datetime)                   AS day
+    FROM STG_FIXTURES_DEDUP;
 DIM_TEAM
 sql
-CREATE OR REPLACE TABLE DIM_TEAM AS
-SELECT DISTINCT
-    home_team_uuid   AS team_key,
-    home_team        AS team_name,
-    home_team_short  AS team_short_name
-FROM STG_FIXTURES_DEDUP
-UNION
-SELECT DISTINCT
-    away_team_uuid   AS team_key,
-    away_team        AS team_name,
-    away_team_short  AS team_short_name
-FROM STG_FIXTURES_DEDUP;
+
+    CREATE OR REPLACE TABLE DIM_TEAM AS
+    SELECT DISTINCT
+        home_team_uuid   AS team_key,
+        home_team        AS team_name,
+        home_team_short  AS team_short_name
+    FROM STG_FIXTURES_DEDUP
+    UNION
+    SELECT DISTINCT
+        away_team_uuid   AS team_key,
+        away_team        AS team_name,
+        away_team_short  AS team_short_name
+    FROM STG_FIXTURES_DEDUP;
 DIM_COMPETITION
 sql
-CREATE OR REPLACE TABLE DIM_COMPETITION AS
-SELECT DISTINCT
-    competition_uuid     AS competition_key,
-    competition,
-    season_uuid,
-    season,
-    region,
-    country,
-    country_code
-FROM STG_FIXTURES_DEDUP;
+
+    CREATE OR REPLACE TABLE DIM_COMPETITION AS
+    SELECT DISTINCT
+        competition_uuid     AS competition_key,
+        competition,
+        season_uuid,
+        season,
+        region,
+        country,
+        country_code
+    FROM STG_FIXTURES_DEDUP;
 DIM_VENUE
 sql
-CREATE OR REPLACE TABLE DIM_VENUE AS
-SELECT DISTINCT
-    venue_uuid   AS venue_key,
-    venue,
-    region,
-    country,
-    country_code
-FROM STG_FIXTURES_DEDUP;
+
+    CREATE OR REPLACE TABLE DIM_VENUE AS
+    SELECT DISTINCT
+        venue_uuid   AS venue_key,
+        venue,
+        region,
+        country,
+        country_code
+    FROM STG_FIXTURES_DEDUP;
 FACT_GAME_RESULTS (s window functions)
 sql
-CREATE OR REPLACE TABLE FACT_GAME_RESULTS AS
-WITH BASE AS (
+
+    CREATE OR REPLACE TABLE FACT_GAME_RESULTS AS
+    WITH BASE AS (
 
     SELECT
         f.game_uuid,
@@ -312,8 +315,8 @@ WITH BASE AS (
             ELSE 0
         END                                    AS is_draw
     FROM STG_FIXTURES_DEDUP f
-),
-ENRICHED AS (
+    ),
+    ENRICHED AS (
     SELECT
         b.*,
 
@@ -333,7 +336,7 @@ ENRICHED AS (
         ) AS game_sequence_number
 
     FROM BASE b
-)
-SELECT *
-FROM ENRICHED;
+    )
+    SELECT *
+    FROM ENRICHED;
 
