@@ -4,13 +4,10 @@
 Tento projekt sa zameriava na analýzu baseballových zápasov pomocou dát zo Snowflake Marketplace.
 Použitý dataset pochádza od poskytovateľa Stats Perform (Opta) a obsahuje detailné informácie o zápasoch, tímoch, skóre, súťažiach a štadiónoch.
 
-Prečo som si vybral tento dataset
+Prečo som si vybral tento dataset:
 baseball je dátovo bohatý šport, ideálny na analytické modelovanie,
-
 dataset obsahuje časové, geografické aj výkonové údaje,
-
 umožňuje vytvoriť plnohodnotný dimenzionálny model,
-
 dá sa na ňom demonštrovať kompletný ELT proces v Snowflake.
 
 Biznis proces
