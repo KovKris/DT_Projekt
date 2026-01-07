@@ -447,5 +447,8 @@ Obrázok:
 
 <img width="2560" height="1392" alt="Graf-5" src="https://github.com/user-attachments/assets/a26291cd-8a7a-4326-bc8c-904ffd0d71c5" />
 
+
+
+
 Autor:Kristóf Kovács
 
