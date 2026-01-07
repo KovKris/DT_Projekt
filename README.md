@@ -77,6 +77,7 @@ produktivitu štadiónov,
 vývoj skóre v čase.
 
 Star Schema diagram
+
 <img width="753" height="653" alt="DT_Projekt" src="https://github.com/user-attachments/assets/137a91c6-10fb-4b1e-aa81-d5ec95f63eba" />
 
 Popis tabuliek
