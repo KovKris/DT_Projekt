@@ -3,7 +3,8 @@
 Téma projektu
 Témou projektu je analýza vývoja pandémie COVID‑19 na základe dát z Európskeho centra pre prevenciu a kontrolu chorôb (ECDC). Dataset obsahuje denné epidemiologické údaje pre všetky krajiny sveta, vrátane počtu prípadov, úmrtí, populácie a geografických atribútov.
 
-Prečo som si vybral tento dataset
+Prečo som si vybral tento dataset:
+
 Dáta sú kvalitné, oficiálne a pravidelne aktualizované.
 
 Dataset je dostupný priamo v Snowflake Marketplace, čo spĺňa požiadavky zadania.
@@ -12,8 +13,10 @@ Obsahuje časové, geografické aj numerické metriky, ktoré sú ideálne pre t
 
 Umožňuje analyzovať reálne udalosti, ako priebeh pandémie, trendy a dopady na jednotlivé krajiny.
 
-Aký biznis proces dáta podporujú
+Aký biznis proces dáta podporujú:
+
 Dataset podporuje biznis proces monitorovania epidemiologickej situácie.
+
 Konkrétne umožňuje:
 
 sledovať denné prípady a úmrtia,
@@ -24,7 +27,7 @@ vyhodnocovať trendy a dynamiku šírenia,
 
 podporovať rozhodovanie v oblasti verejného zdravia.
 
-Typy údajov v datasete
+Typy údajov v datasete,
 Dataset obsahuje tieto typy dát:
 
 časové údaje – dátum reportu,
