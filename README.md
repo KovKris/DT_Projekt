@@ -29,13 +29,11 @@ Dataset obsahuje:
 
 VARCHAR – textové údaje (tímy, súťaže, krajiny, štadióny)
 
-NUMBER – skóre, počty, identifikátory
+INT – skóre, počty, identifikátory
 
 TIMESTAMP_NTZ – dátum a čas zápasu
 
 DATE – dátumová dimenzia
-
-BOOLEAN (1/0) – výhra, prehra, remíza
 
 Popis zdrojovej tabuľky
 FIXTURES
@@ -155,14 +153,14 @@ Dáta pochádzajú zo Snowflake Marketplace:
 Code
 OPTA_DATA_BASEBALL_SCHEDULE_AND_RESULTS_DATA__SAMPLE.BASEBALL.FIXTURES
 Staging RAW
-sql
+sql:
     
     CREATE OR REPLACE TABLE STG_FIXTURES_RAW AS
     SELECT *
     FROM OPTA_DATA_BASEBALL_SCHEDULE_AND_RESULTS_DATA__SAMPLE.BASEBALL.FIXTURES;
 📤 Load
 Čistenie dát
-sql
+sql:
 
     CREATE OR REPLACE TABLE STG_FIXTURES_CLEAN AS
     SELECT
@@ -193,7 +191,7 @@ sql
     WHERE HOME_SCORE IS NOT NULL
       AND AWAY_SCORE IS NOT NULL;
 Deduplikácia
-sql
+sql:
     
     CREATE OR REPLACE TABLE STG_FIXTURES_DEDUP AS
     SELECT *
@@ -209,7 +207,7 @@ sql
     WHERE rn = 1;
 ⚙️ Transform
 DIM_DATE
-sql
+sql:
 
     CREATE OR REPLACE TABLE DIM_DATE AS
     SELECT DISTINCT
@@ -219,7 +217,7 @@ sql
         DAY(game_datetime)                   AS day
     FROM STG_FIXTURES_DEDUP;
 DIM_TEAM
-sql
+sql:
 
     CREATE OR REPLACE TABLE DIM_TEAM AS
     SELECT DISTINCT
@@ -234,7 +232,7 @@ sql
         away_team_short  AS team_short_name
     FROM STG_FIXTURES_DEDUP;
 DIM_COMPETITION
-sql
+sql:
 
     CREATE OR REPLACE TABLE DIM_COMPETITION AS
     SELECT DISTINCT
@@ -247,7 +245,7 @@ sql
         country_code
     FROM STG_FIXTURES_DEDUP;
 DIM_VENUE
-sql
+sql:
 
     CREATE OR REPLACE TABLE DIM_VENUE AS
     SELECT DISTINCT
@@ -258,7 +256,7 @@ sql
         country_code
     FROM STG_FIXTURES_DEDUP;
 FACT_GAME_RESULTS (s window functions)
-sql
+sql:
 
     CREATE OR REPLACE TABLE FACT_GAME_RESULTS AS
     WITH BASE AS (
