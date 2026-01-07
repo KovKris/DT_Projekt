@@ -54,11 +54,13 @@ VENUE – štadión
 
 COUNTRY, REGION – geografické údaje
 
-ERD pôvodného datasetu
+ERD pôvodného datasetu:
 
 <img width="391" height="888" alt="ERD_diagram_projekt" src="https://github.com/user-attachments/assets/f6adf094-693c-454e-bcf1-2b9457163064" />
 
+----------------------
 2️⃣ Návrh dimenzionálneho modelu (Star Schema)
+----------------------
 Dimenzionálny model je navrhnutý podľa Kimballovej metodológie.
 Obsahuje:
 
@@ -76,11 +78,13 @@ produktivitu štadiónov,
 
 vývoj skóre v čase.
 
-Star Schema diagram
+Star Schema diagram:
 
 <img width="753" height="653" alt="DT_Projekt" src="https://github.com/user-attachments/assets/137a91c6-10fb-4b1e-aa81-d5ec95f63eba" />
 
+----------
 Popis tabuliek
+----------
 ⭐ FACT_GAME_RESULTS
 Primárny kľúč: game_uuid + team_key  
 Cudzie kľúče: date_key, team_key, competition_key, venue_key
@@ -147,7 +151,9 @@ Window functions (povinné):
 -country_code
 -SCD typ: Type 1
 
+----------------
 3️⃣ ELT proces v Snowflake
+----------------
 📥 Extract
 Dáta pochádzajú zo Snowflake Marketplace:
 
@@ -336,8 +342,9 @@ sql:
     SELECT *
     FROM ENRICHED;
 
-
+--------------------
 ⭐ Vizualizácia 1: Vývoj skóre tímu v čase
+--------------------
 SQL
 sql:
     
@@ -362,7 +369,9 @@ Obrázok:
 
 <img width="2560" height="1450" alt="Graf-1" src="https://github.com/user-attachments/assets/c27835aa-f863-4776-8bfb-e3b8cfdc1250" />
 
+--------------------
 ⭐ Vizualizácia 2: Poradie tímov podľa počtu výhier
+--------------------
 SQL
 sql
 
@@ -383,7 +392,9 @@ Obrázok:
 
 <img width="2560" height="1392" alt="Graf-2" src="https://github.com/user-attachments/assets/abfd0ba8-23c8-4a7a-88b7-abb4645dd641" />
 
+--------------------
 ⭐ Vizualizácia 3: Počet odohraných zápasov podľa dátumu
+--------------------
 SQL
 sql
 
@@ -403,8 +414,9 @@ Obrázok:
 
 <img width="2560" height="1392" alt="Graf-3" src="https://github.com/user-attachments/assets/5cf57b10-270d-43fc-9e4e-2a0a53d37413" />
 
-
+--------------------
 ⭐ Vizualizácia 4: Priemerné skóre podľa dňa v týždni
+--------------------
 SQL
 sql
 
@@ -428,7 +440,9 @@ Obrázok:
 
 <img width="2560" height="1392" alt="Graf-4" src="https://github.com/user-attachments/assets/b630842a-48c6-4031-b889-c62dab52db54" />
 
+--------------------
 ⭐ Vizualizácia 5: Najproduktívnejšie štadióny podľa počtu bodov
+--------------------
 SQL
 sql
 
